@@ -1,11 +1,12 @@
 ;;;; bcl.asd
 
-(asdf:defsystem #:bcl
+(defsystem #:bcl
   :description "Describe bcl here"
   :author "Your Name <your.name@example.com>"
   :license  "Specify license here"
   :version "0.0.1"
-  :serial t
-  :depends-on (#:val314159/lutil)
+  :serial T
+  :depends-on (#:lutil #:hunchentoot #:hunchensocket)
   :components ((:file "package")
+               (:file "macros")
                (:file "bcl")))

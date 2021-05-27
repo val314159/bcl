@@ -1,0 +1,54 @@
+#|-*-mode:lisp-*-
+exec ros -Q -- $0 "$@" # |#
+(progn ;;init forms
+  (pushnew :hunchentoot-no-ssl *features*)
+  (require 'asdf)
+  (pushnew (truename "..") asdf:*central-registry*)
+  #+quicklisp(eval-when (:compile-toplevel :load-toplevel :execute)
+	       (ql:quickload '(:hunchentoot :hunchensocket :lutil :bcl) :silent t))
+  )
+(defpackage :bcl.serve (:use :cl :lutil :hunchentoot :hunchensocket :bcl))
+(in-package :bcl.serve)
+(defclass chat-room (websocket-resource)
+  ((name :initarg :name :initform (error "Name this room!") :reader name))
+  (:default-initargs :client-class 'user))
+(defclass user (websocket-client)
+  ((name :initarg :user-agent :reader name :initform (error "Name this user!"))))
+(defvar *chat-rooms* (list (make-instance 'chat-room :name "/bongo")
+                           (make-instance 'chat-room :name "/fury")))
+(defun find-room (request)
+  (find (script-name request) *chat-rooms* :test #'string= :key #'name))
+(pushnew 'find-room *websocket-dispatch-table*)
+(defun broadcast (room message &rest args)
+  (loop for peer in (clients room)
+        do (send-text-message peer (apply #'format nil message args))))
+(defmethod client-connected ((room chat-room) user)
+  (broadcast room "~a has joined ~a" (name user) (name room)))
+(defmethod client-disconnected ((room chat-room) user)
+  (broadcast room "~a has left ~a" (name user) (name room)))
+(defmethod text-message-received ((room chat-room) user message)
+  (broadcast room "~a says ~a" (name user) message))  
+(define-easy-handler (indexx :uri "/x") () "\
+xxxx")
+(define-easy-handler (index :uri "/s") () "\
+ <script>
+     var ws = window.ws = new WebSocket(
+         'ws' + location.origin.substr(4) + '/websocket');
+     ws.onopen    = function(e){ ws.send('Hello!') }
+     ws.onmessage = function(ev){ alert(e.data) }
+ </script>
+ ")
+(defvar *server* (make-instance 'websocket-easy-acceptor
+				:port          (or (getenv "PORT")          8080)
+				:document-root (or (getenv "DOCUMENT_ROOT") "c/d/")))
+(defun start-server () (start *server*) (fmt "listening...~%"))
+(defun stop-server () (fmt "stopping...~%") (start *server*) (fmt "stopped...~%"))
+(defun main (&rest argv)
+  (declare (ignorable argv))
+  (unless (acceptor-listen-socket *server*) (start-server))
+  (loop (fmt "zzz...~%") (sleep 60)))
+;; Now open two browser windows on http://www.websocket.org/echo.html,
+;; enter `ws://localhost:12345/bongo` as the host and play around chatting with
+;; yourself.
+
+;;; vim: set ft=lisp lisp:
