@@ -1,5 +1,5 @@
-
-eqqq: srv ps
+q: serve
+dseqqq: srv ps
 df21qqq: clean srv ps
 #setup: stop-srv start-srv
 
@@ -10,6 +10,8 @@ all:
 stop-srv:
 	@ps ax | grep -v grep | grep ./serve.ros \
 	       | cut -d\  -f1 | xargs kill
+serve:
+	./$@.ros
 srv: serve.ros Makefile
 	@make stop-srv
 	@dtach -n $@ ./$<

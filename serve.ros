@@ -27,7 +27,12 @@ exec ros -Q -- $0 "$@" # |#
 (defmethod client-disconnected ((room chat-room) user)
   (broadcast room "~a has left ~a" (name user) (name room)))
 (defmethod text-message-received ((room chat-room) user message)
-  (broadcast room "~a says ~a" (name user) message))  
+  (broadcast room "~a says ~a" (name user) message))
+
+(define-easy-handler (indexxqqq :uri "/") ()
+  (setf (hunchentoot:content-type*) "text/plain")
+  (uiop:read-file-string "c/d/index.html"))
+
 (define-easy-handler (indexx :uri "/x") () "\
 xxxx")
 (define-easy-handler (index :uri "/s") () "\
