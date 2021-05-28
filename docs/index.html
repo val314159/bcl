@@ -1,7 +1,6 @@
 <link rel="stylesheet" href="site.css">
 <script src="util.js"></script>
-Index
-<hr>
+<h3>Index</h3>
 <li><a href="/b/0/genesis/block.txt">block 0</a></li>
 <li><a href="/b/?b=0">block(s) 0</a></li>
 <li><a href="/b/?b=1">block(s) 1</a></li>
@@ -11,5 +10,6 @@ Index
 <hr>
 <h5>Transaction:</h5>
 <textarea autofocus id="xtn" rows="4" cols="20"
-	  onkeydown="return keydown(this)"></textarea>
+	  onkeydown="return keydown(this,event)"></textarea>
+<pre id="out"></pre>
 <script src="app.js"></script>
