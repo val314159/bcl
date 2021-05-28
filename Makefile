@@ -13,7 +13,7 @@ serve: c
 	./$@.ros
 
 c: serve.ros Makefile
-	bash scripts/create_block_chain.sh c/ serve.ros docs/
+	bash scripts/create-block-chain.ros c/ serve.ros docs/
 
 srv: serve.ros c Makefile
 	@make stop-srv

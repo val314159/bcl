@@ -1,0 +1,26 @@
+#|-*- mode:lisp -*-
+exec ros -Q -- $0 "$@" # |#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  ;;#+quicklisp(ql:quickload '() :silent t)
+  )
+
+(defpackage :ros.script.create-block-chain.3831226920
+  (:use :cl))
+(in-package :ros.script.create-block-chain.3831226920)
+
+(defun run (cmd)
+  (uiop:run-program cmd :output *standard-output*))
+
+(defmacro runf (&rest r)
+  `(run (format nil ,@r)))
+
+(defun main (dir block docs)
+  (let ((genesis (format nil "~a/t/genesis.blk" dir)))
+    (runf "rm   -fr ~a" dir)
+    (runf "mkdir -p ~a/f" dir)
+    (runf "mkdir -p ~a/t" dir)
+    (runf "cp   -rp ~a/* ~a" docs dir)
+    (runf "cp   -rp ~a   ~a" block genesis)
+    (runf "exec scripts/create-block-dir.ros ~a 0 genesis ~a" dir genesis)))
+;;; vim: set ft=lisp lisp:

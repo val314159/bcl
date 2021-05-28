@@ -1,0 +1,27 @@
+#|-*- mode:lisp -*-
+exec ros -Q -- $0 "$@" # |#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  ;;#+quicklisp(ql:quickload '() :silent t)
+  )
+
+(defpackage :ros.script.create-block-dir.3831226924
+  (:use :cl))
+(in-package :ros.script.create-block-dir.3831226924)
+
+(defun run (cmd)
+  (uiop:run-program cmd :output *standard-output*))
+
+(defmacro runf (&rest r)
+  `(run (format nil ,@r)))
+
+(defun main (dir bno bid block)
+  (runf "mkdir -p ~a/b/~a/~a/"                dir bno bid)
+  (runf "mkdir -p ~a/b/~a/~a/i"               dir bno bid)
+  (runf "mkdir -p ~a/b/~a/~a/c"               dir bno bid)
+  (runf "mkdir -p ~a/b/~a/~a/n"               dir bno bid)
+  (runf "mkdir -p ~a/b/~a/~a/x"               dir bno bid)
+  (runf "mkdir -p ~a/b/~a/~a/b"               dir bno bid)
+  (runf "mkdir -p ~a/b/~a/~a/t"               dir bno bid)
+  (runf "mv    ~a ~a/b/~a/~a/block.txt" block dir bno bid))
+;;; vim: set ft=lisp lisp:
