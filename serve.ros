@@ -5,7 +5,8 @@ exec ros -Q -- $0 "$@" # |#
   (require 'asdf)
   (pushnew (truename "..") asdf:*central-registry*)
   #+quicklisp(eval-when (:compile-toplevel :load-toplevel :execute)
-	       (ql:quickload '(:hunchentoot :hunchensocket :lutil :bcl) :silent t))
+	       (ql:quickload
+		'(:hunchentoot :hunchensocket :lutil :bcl) :silent t))
   )
 (defpackage :bcl.serve (:use :cl :lutil :hunchentoot :hunchensocket :bcl))
 (in-package :bcl.serve)
@@ -28,35 +29,16 @@ exec ros -Q -- $0 "$@" # |#
 ;;  (broadcast room "~a has left ~a" (name user) (name room)))
 (defmethod text-message-received ((room chat-room) user message)
   (broadcast room "~a says ~a" (name user) message))
-(define-easy-handler (indssexxqqq :uri "/b/0/") () "
-<li><a href='genesis/block.txt'>genesis</a></li>
-")
-
+;;(define-easy-handler (indssexxqqq :uri "/b/0/") ()
+;;"<li><a href='genesis/block.txt'>genesis</a></li>")
 (define-easy-handler (indsffsexxqqq :uri "/b/") (b)
-
-  (let ((sos (make-string-output-stream)))
-
-    (uiop:run-program (format nil "ls -1 c/b/~s" b) :output sos)
+  (let ((sos (make-string-output-stream))
+	(fun (lambda (x)
+	       (f "<li><a href='/b/~a/~a/block.txt'>~a</a></li>" b x x))))
+    (uiop:run-program (f "ls -1 c/b/~s" b) :output sos)
     (apply #'concatenate 'string
-    (mapcar
-	    (lambda (x) (format nil "<li><a href='/b/~a/~a/block.txt'>~a</a></li>" b x x))
-	    (uiop:split-string (get-output-stream-string sos)
-			       :separator (string #\Newline))))))
-
-;;  (uiop:read-file-string "c/index.html"))
-;;(define-easy-handler (indexxqqq :uri "/") ()
-;;  (setf (hunchentoot:content-type*) "text/plain")
-;;  (uiop:read-file-string "c/d/index.html"))
-;;(define-easy-handler (indexx :uri "/x") () "\
-;;xxxx")
-;;(define-easy-handler (index :uri "/s") () "\
-;; <script>
-;;     var ws = window.ws = new WebSocket(
-;;         'ws' + location.origin.substr(4) + '/websocket');
-;;     ws.onopen    = function(e){ ws.send('Hello!') }
-;;     ws.onmessage = function(ev){ alert(e.data) }
-;; </script>
-;; ")
+	   (mapcar fun (split-string (get-output-stream-string sos)
+				     :separator (string #\Newline))))))
 (defvar *server* (make-instance 'websocket-easy-acceptor
 				:port          (or (getenv "PORT")          8080)
 				:document-root (or (getenv "DOCUMENT_ROOT") "c/")))
@@ -66,8 +48,4 @@ exec ros -Q -- $0 "$@" # |#
   (declare (ignorable argv))
   (unless (acceptor-listen-socket *server*) (start-server))
   (loop (fmt "zzz...~%") (sleep 60)))
-;; Now open two browser windows on http://www.websocket.org/echo.html,
-;; enter `ws://localhost:12345/bongo` as the host and play around chatting with
-;; yourself.
-
 ;;; vim: set ft=lisp lisp:

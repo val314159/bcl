@@ -1,0 +1,14 @@
+;;-*-mode:lisp-*-;;
+(b "1234567890abcdef" ;; signature
+   "1234567890abcdef" ;; wallet id
+   "this is the body0")
+(x "1234567890abcdef" ;; signature
+   "1234567890abcdef" ;; wallet id
+   "this is the body1")
+(x "1234567890abcdef" ;; signature
+   "1234567890abcdef" ;; wallet id
+   "this is the body2")
+(x "1234567890abcdef" ;; signature
+   "1234567890abcdef" ;; wallet id
+   "this is the body3")
+"1234567890abcdef" ;; mining nonce

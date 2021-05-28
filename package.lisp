@@ -2,6 +2,6 @@
 
 (defpackage #:bcl
   (:import-from #:hunchentoot #:acceptor-listen-socket)
-  (:import-from #:uiop #:getenv)
-  (:export #:acceptor-listen-socket #:getenv)
+  (:import-from #:uiop #:getenv #:split-string)
+  (:export #:acceptor-listen-socket #:getenv #:f)
   (:use #:cl #:hunchentoot #:hunchensocket))
