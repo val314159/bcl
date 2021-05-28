@@ -1,4 +1,7 @@
 
+test: clean
+	./mineblock.py <b.txt | tee out.txt
+
 call: clean all
 
 all: serve
@@ -21,5 +24,5 @@ ps:
 	@ps ax | grep -v grep | grep dtach | cat
 
 clean: stop-srv
-	@rm -fr *~ c
+	@rm -fr *~ c my-secret* out.txt
 	@ls -la
