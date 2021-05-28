@@ -1,4 +1,13 @@
 
+keys:
+	./mb.py
+	ls -la
+	hexdump my-secret-seed
+	hexdump my-secret-key
+	hexdump my-secret-sign
+#	./mineblock.py <b.txt | tee out.txt
+#	./mineblock.py <b.txt | tee out.txt
+
 test: clean
 	./mineblock.py <b.txt | tee out.txt
 
